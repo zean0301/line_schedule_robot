@@ -1,0 +1,4 @@
+line:
+  private-key: ${LINE_PRIVATE_KEY}
+  kid: ${LINE_KID}
+  channel-id: ${LINE_CHANNEL_ID}

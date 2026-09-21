@@ -10,10 +10,6 @@ import com.nimbusds.jwt.SignedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.util.Date;
 
@@ -22,20 +18,14 @@ public class LineJwtGenerator {
     @Value("${line.kid}")
     private String kid;
 
-    @Value("${line.private-key-path}")
-    private String privateKeyPath;
+    @Value("${line.private-key}")
+    private String privateKey;
 
     @Value("${line.channel-id}")
     private String channelId;
 
-    private String privateJwkJson;
-
     public String generate() throws Exception {
-        if (privateJwkJson == null || privateJwkJson.isBlank()) {
-            privateJwkJson = loadPrivateJwkJson();
-        }
-
-        RSAKey rsaKey = RSAKey.parse(privateJwkJson);
+        RSAKey rsaKey = RSAKey.parse(privateKey);
 
         JWSSigner signer = new RSASSASigner(rsaKey);
 
@@ -67,13 +57,5 @@ public class LineJwtGenerator {
         signedJWT.sign(signer);
 
         return signedJWT.serialize();
-    }
-
-    private String loadPrivateJwkJson() throws IOException {
-        if (privateKeyPath == null || privateKeyPath.isBlank()) {
-            throw new IllegalStateException("line.private-key-path is required");
-        }
-
-        return Files.readString(Path.of(privateKeyPath), StandardCharsets.UTF_8);
     }
 }
