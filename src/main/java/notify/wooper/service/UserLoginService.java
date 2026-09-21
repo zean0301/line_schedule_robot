@@ -2,6 +2,7 @@ package notify.wooper.service;
 
 import com.google.common.hash.Hashing;
 import notify.wooper.mapper.UserLoginMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -9,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class UserLoginService {
 
+	@Autowired
 	private final UserLoginMapper userLoginMapper;
 
 	public UserLoginService(UserLoginMapper userLoginMapper) {

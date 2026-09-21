@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>使用者登入</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #f0f4ff, #f8fbff);
+      color: #1f2937;
+    }
+
+    .login-card {
+      width: min(100%, 360px);
+      margin: 24px;
+      padding: 32px 24px;
+      border-radius: 16px;
+      background: #ffffff;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.75rem;
+      text-align: center;
+    }
+
+    p {
+      margin: 0 0 24px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    label {
+      display: grid;
+      gap: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16);
+    }
+
+    button {
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: #2563eb;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    .message {
+      min-height: 24px;
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .message.success {
+      color: #15803d;
+    }
+
+    .message.error {
+      color: #dc2626;
+    }
+  </style>
+</head>
+<body>
+  <main class="login-card">
+    <h1>登入</h1>
+    <p>請輸入帳號與密碼</p>
+
+    <form id="login-form">
+      <label for="user-id">
+        帳號
+        <input id="user-id" name="user-id" type="text" autocomplete="username" required>
+      </label>
+
+      <label for="password">
+        密碼
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+      </label>
+
+      <button id="submit-button" type="submit">登入</button>
+    </form>
+
+    <div id="message" class="message" aria-live="polite"></div>
+  </main>
+
+  <script>
+    const form = document.getElementById("login-form");
+    const userIdInput = document.getElementById("user-id");
+    const passwordInput = document.getElementById("password");
+    const submitButton = document.getElementById("submit-button");
+    const message = document.getElementById("message");
+
+    function setMessage(text, type) {
+      message.textContent = text;
+      message.className = type ? `message ${type}` : "message";
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      setMessage("", "");
+
+      const userId = userIdInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!userId || !password) {
+        setMessage("請輸入帳號與密碼。", "error");
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "登入中...";
+
+      try {
+        const response = await fetch("/user/user_login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            password
+          })
+        });
+
+        let data;
+
+        try {
+          data = await response.json();
+        } catch (error) {
+          data = null;
+        }
+
+        if (response.ok && data?.success) {
+          setMessage(data.message || "登入成功", "success");
+          return;
+        }
+
+        setMessage(data?.message || "登入失敗，請確認帳號密碼。", "error");
+      } catch (error) {
+        setMessage("無法連線到登入服務，請稍後再試。", "error");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "登入";
+      }
+    });
+  </script>
+</body>
+</html>
