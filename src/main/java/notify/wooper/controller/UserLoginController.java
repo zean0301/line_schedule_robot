@@ -1,5 +1,6 @@
 package notify.wooper.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import notify.wooper.dto.UserLoginRequest;
 import notify.wooper.dto.UserLoginResponse;
 import notify.wooper.service.UserLoginService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class UserLoginController {
@@ -26,12 +28,12 @@ public class UserLoginController {
 			return ResponseEntity.badRequest().body(new UserLoginResponse(false, "user_id and password are required", ""));
 		}
 
-		String authenticated = userLoginService.authenticate(request.userId(), request.password());
-		if (authenticated.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new UserLoginResponse(false, "Invalid user_id or password", ""));
-		}
+		log.info("/user_login start");
+		log.debug("/user_login user: {}", request.userId());
 
+		String authenticated = userLoginService.authenticate(request.userId(), request.password());
+
+		log.info("/user_login end");
 		return ResponseEntity.ok(new UserLoginResponse(true, "Login success", authenticated));
 	}
 }

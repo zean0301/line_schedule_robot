@@ -1,5 +1,6 @@
 package notify.wooper.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/line")
 public class LineController {
@@ -22,8 +23,10 @@ public class LineController {
 
     @PostMapping("/generate_line_token")
     public ResponseEntity<String> generateLineToken() throws Exception {
+        log.info("/generate_line_token start");
         String token = lineJwtGenerator.generate();
 
+        log.info("/generate_line_token end");
         return ResponseEntity.ok(token);
     }
 

@@ -2,6 +2,7 @@
 
 import com.google.common.hash.Hashing;
 import notify.wooper.entity.UserLogin;
+import notify.wooper.exception.InvalidCredentialsException;
 import notify.wooper.mapper.UserLoginMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class UserLoginService {
 		Integer count = userLoginMapper.countByUserIdAndPassword(userId, encodePassword(userId, password));
 
 		if(count != 1) {
-			return "";
+			throw new InvalidCredentialsException();
 		}
 
 		UserLogin userLogin = userLoginMapper.getUserByUserId(userId);

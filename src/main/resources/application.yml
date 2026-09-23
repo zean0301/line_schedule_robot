@@ -18,3 +18,11 @@ jwt:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+
+logging:
+  file:
+    name: C:/wooper/logs/wooper.log
+
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n%ex{20}"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n%ex{20}"
