@@ -24,8 +24,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     private static final Set<String> PUBLIC_PATHS = Set.of(
-            "/user/user_login",
-            "/line/webhook"
+            "/api/user/user_login",
+            "/api/line/webhook"
     );
 
     @Override
