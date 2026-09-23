@@ -23,15 +23,15 @@ public class UserLoginController {
 	@PostMapping("/user_login")
 	public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
 		if (request.userId() == null || request.userId().isBlank() || request.password() == null || request.password().isBlank()) {
-			return ResponseEntity.badRequest().body(new UserLoginResponse(false, "user_id and password are required"));
+			return ResponseEntity.badRequest().body(new UserLoginResponse(false, "user_id and password are required", ""));
 		}
 
-		boolean authenticated = userLoginService.authenticate(request.userId(), request.password());
-		if (!authenticated) {
+		String authenticated = userLoginService.authenticate(request.userId(), request.password());
+		if (authenticated.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-				.body(new UserLoginResponse(false, "Invalid user_id or password"));
+				.body(new UserLoginResponse(false, "Invalid user_id or password", ""));
 		}
 
-		return ResponseEntity.ok(new UserLoginResponse(true, "Login success"));
+		return ResponseEntity.ok(new UserLoginResponse(true, "Login success", authenticated));
 	}
 }

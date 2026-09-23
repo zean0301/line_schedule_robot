@@ -10,3 +10,11 @@ line:
     ${LINE_PRIVATE_KEY}
   kid: ${LINE_KID}
   channel-id: ${LINE_CHANNEL_ID}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  valid-seconds: ${JWT_VALID_SECONDS}
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
