@@ -17,14 +17,8 @@ public class JwtService {
     private final SecretKey secretKey;
     private final int validSeconds;
 
-    public JwtService(
-            @Value("${jwt.secret-key}") String secretKeyStr,
-            @Value("${jwt.valid-seconds}") int validSeconds) {
-
-        this.secretKey = Keys.hmacShaKeyFor(
-                secretKeyStr.getBytes(StandardCharsets.UTF_8)
-        );
-
+    public JwtService(@Value("${jwt.secret-key}") String secretKeyStr, @Value("${jwt.valid-seconds}") int validSeconds) {
+        this.secretKey = Keys.hmacShaKeyFor(secretKeyStr.getBytes(StandardCharsets.UTF_8));
         this.validSeconds = validSeconds;
     }
 
@@ -44,5 +38,14 @@ public class JwtService {
                 .claim("userId", userId)
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public Claims validateToken(String token) {
+
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
