@@ -181,6 +181,7 @@
 
         if (response.ok && data?.success) {
           setMessage(data.message || "登入成功", "success");
+          window.location.href = "/schedule.html";
           return;
         }
 

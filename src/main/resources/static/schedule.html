@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排程輸入頁面</title>
+    <style>
+        :root {
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f4f6;
+        }
+
+        main {
+            width: min(100%, 840px);
+            margin: 40px auto;
+            padding: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        }
+
+        h1 {
+            margin: 0 0 24px;
+            font-size: 1.6rem;
+        }
+
+        form {
+            display: grid;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: grid;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        button {
+            width: 120px;
+            padding: 10px 12px;
+            border: 0;
+            border-radius: 8px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+        }
+
+        th,
+        td {
+            border: 1px solid #e5e7eb;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #f9fafb;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>新增排程</h1>
+    <form id="schedule-form">
+        <label for="schedule-datetime">
+            日期時間
+            <input id="schedule-datetime" name="schedule-datetime" type="datetime-local" lang="en-GB">
+        </label>
+
+        <label for="content">
+            內容
+            <input id="content" name="content" type="text" placeholder="請輸入內容">
+        </label>
+
+        <button type="submit">送出</button>
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>日期時間</th>
+            <th>內容</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>2026-09-24 10:30</td>
+            <td>範例資料</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+<script>
+    const scheduleForm = document.getElementById("schedule-form");
+    const scheduleDatetimeInput = document.getElementById("schedule-datetime");
+
+    scheduleForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+    });
+
+    scheduleDatetimeInput.addEventListener("change", () => {
+        scheduleDatetimeInput.blur();
+    });
+
+    document.addEventListener("pointerdown", (event) => {
+        if (event.target !== scheduleDatetimeInput) {
+            scheduleDatetimeInput.blur();
+        }
+    });
+</script>
+</body>
+</html>
