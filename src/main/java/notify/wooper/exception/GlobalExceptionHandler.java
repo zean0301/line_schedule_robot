@@ -33,6 +33,17 @@ public class GlobalExceptionHandler {
                 .body("Database operation failed");
     }
 
+    @ExceptionHandler(InvalidDateTimeFormatException.class)
+    public ResponseEntity<String> handleInvalidDateTimeFormatException(InvalidDateTimeFormatException e) {
+
+        log.error("Datetime format invalid", e);
+        System.out.println("Datetime format invalid: " + e);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception e) {
 
