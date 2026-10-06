@@ -8,9 +8,9 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserLoginMapper {
 
-	@Select("SELECT COUNT(1) FROM USER_LOGIN WHERE USER_ID = #{userId} AND PASSWORD = #{password}")
+	@Select("SELECT COUNT(1) FROM USER_LOGIN WHERE user_id = #{userId} AND password = #{password}")
 	Integer countByUserIdAndPassword(@Param("userId") String userId, @Param("password") String password);
 
-	@Select("SELECT * FROM USER_LOGIN WHERE USER_ID = #{userId}")
+	@Select("SELECT * FROM USER_LOGIN WHERE user_id = #{userId}")
 	UserLogin getUserByUserId(@Param("userId") String userId);
 }

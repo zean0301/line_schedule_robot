@@ -139,6 +139,11 @@
     const submitButton = document.getElementById("submit-button");
     const message = document.getElementById("message");
 
+    function saveAuthToken(token) {
+      document.cookie = `auth_token=${encodeURIComponent(token)}; Path=/; SameSite=Lax`;
+      sessionStorage.setItem("auth_session", "active");
+    }
+
     function setMessage(text, type) {
       message.textContent = text;
       message.className = type ? `message ${type}` : "message";
@@ -179,7 +184,10 @@
           data = null;
         }
 
-        if (response.ok && data?.success) {
+        const token = typeof data?.token === "string" ? data.token.trim() : "";
+
+        if (response.ok && token) {
+          saveAuthToken(token);
           setMessage(data.message || "登入成功", "success");
           window.location.href = "/schedule.html";
           return;

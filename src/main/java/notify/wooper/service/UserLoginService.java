@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class UserLoginService {
 
 	@Autowired
-	private final UserLoginMapper userLoginMapper;
+	private UserLoginMapper userLoginMapper;
 	@Autowired
 	private JwtService jwtService;
 

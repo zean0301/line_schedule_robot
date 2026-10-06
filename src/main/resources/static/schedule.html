@@ -19,6 +19,19 @@
             background: #f3f4f6;
         }
 
+        .page-header {
+            width: min(100%, 840px);
+            margin: 24px auto 0;
+            padding: 0 24px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .logout-button {
+            width: auto;
+            background: #dc2626;
+        }
+
         main {
             width: min(100%, 840px);
             margin: 40px auto;
@@ -84,6 +97,9 @@
     </style>
 </head>
 <body>
+<header class="page-header">
+    <button id="logout-button" class="logout-button" type="button">登出</button>
+</header>
 <main>
     <h1>新增排程</h1>
     <form id="schedule-form">
@@ -118,9 +134,55 @@
 <script>
     const scheduleForm = document.getElementById("schedule-form");
     const scheduleDatetimeInput = document.getElementById("schedule-datetime");
+    const contentInput = document.getElementById("content");
+    const logoutButton = document.getElementById("logout-button");
 
-    scheduleForm.addEventListener("submit", (event) => {
+    function getCookieValue(name) {
+        const cookie = document.cookie
+            .split("; ")
+            .find((item) => item.startsWith(`${name}=`));
+        return cookie ? decodeURIComponent(cookie.split("=").slice(1).join("=")) : "";
+    }
+
+    function clearAuthState() {
+        document.cookie = "auth_token=; Path=/; Max-Age=0; SameSite=Lax";
+        sessionStorage.removeItem("auth_session");
+    }
+
+    const sessionActive = sessionStorage.getItem("auth_session") === "active";
+    const existingToken = getCookieValue("auth_token");
+    if (!sessionActive || !existingToken) {
+        clearAuthState();
+        window.location.href = "/index.html";
+    }
+
+    logoutButton.addEventListener("click", () => {
+        clearAuthState();
+        window.location.href = "/index.html";
+    });
+
+    scheduleForm.addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        const datetime = scheduleDatetimeInput.value.trim();
+        const content = contentInput.value.trim();
+        const token = getCookieValue("auth_token");
+
+        if (!datetime || !content || !token) {
+            return;
+        }
+
+        await fetch("/api/schedule/insert_schedule", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                content,
+                datetime
+            })
+        });
     });
 
     scheduleDatetimeInput.addEventListener("change", () => {

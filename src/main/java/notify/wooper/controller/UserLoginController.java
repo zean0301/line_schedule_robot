@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import notify.wooper.dto.UserLoginRequest;
 import notify.wooper.dto.UserLoginResponse;
 import notify.wooper.service.UserLoginService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,11 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserLoginController {
 
-	private final UserLoginService userLoginService;
-
-	public UserLoginController(UserLoginService userLoginService) {
-		this.userLoginService = userLoginService;
-	}
+	@Autowired
+	private UserLoginService userLoginService;
 
 	@PostMapping("/user_login")
 	public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
